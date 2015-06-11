@@ -18,6 +18,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".TwitterOAuthActivity"
             android:launchMode="singleTask" >
@@ -32,6 +33,10 @@
                     android:scheme="gabu" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".TweetActivity"
+            android:windowSoftInputMode="adjustResize" />
     </application>
 
 </manifest>
