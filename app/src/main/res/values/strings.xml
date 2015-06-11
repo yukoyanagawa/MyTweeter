@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">MyTweeter</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="twitter_consumer_key">v6bY3OKSFXgVSqwissR5Md6Sv</string>
+    <string name="twitter_consumer_secret">BEihEXEjXXKwCgSgLBj5zFkV0Jdm0ugEAz52DDzxXyZkRYEn4A</string>
+    <string name="twitter_oauth">Twitter認証</string>
+    <string name="twitter_callback_url">gabu://twitter</string>
+</resources>
