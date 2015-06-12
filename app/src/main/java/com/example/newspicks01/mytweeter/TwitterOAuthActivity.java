@@ -59,7 +59,7 @@ public class TwitterOAuthActivity extends Activity {
             @Override
             protected void onPostExecute(String url) {
                 if (url != null) {
-                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));//ブラウザを表示するイベントを設定する
                     startActivity(intent);
                 } else {
                     // 失敗。。。

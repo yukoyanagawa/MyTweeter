@@ -40,7 +40,7 @@ public class TweetActivity extends FragmentActivity {
     private void tweet(){
         AsyncTask<String, Void,Boolean> task= new AsyncTask<String, Void, Boolean>() {
             @Override
-            protected Boolean doInBackground(String... params) {
+            protected Boolean doInBackground(String... params) {//非同期で行う処理
                 try {
                     mTwitter.updateStatus(params[0]);
                     return true;
@@ -51,7 +51,7 @@ public class TweetActivity extends FragmentActivity {
             }
 
         @Override
-        protected void onPostExecute(Boolean result){
+        protected void onPostExecute(Boolean result){//doInBackgroundメソッドの実行後にメインスレッドで実行される
             if(result){
                 showToast("ツイートが完了しました。");
                 finish();

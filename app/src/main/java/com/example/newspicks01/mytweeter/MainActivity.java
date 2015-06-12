@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -29,6 +30,8 @@ public class MainActivity extends ListActivity {
     private TweetAdapter mAdapter;
     private Twitter mTwitter;
 
+    int callcount=0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,6 +40,9 @@ public class MainActivity extends ListActivity {
             Intent intent = new Intent(this, TwitterOAuthActivity.class);
             startActivity(intent);
             finish();
+            /*このfinish()で一旦MainActivityが終了し、TwitterOAuthActivityに遷移する。
+            Twitter認証後、再びMainctivityが起動し、OnCreateが呼ばれる。
+             その時はAccsessTokenを所持しているので、else処理になる。*/
         } else {
             mAdapter = new TweetAdapter(this);
             setListAdapter(mAdapter);
@@ -48,9 +54,13 @@ public class MainActivity extends ListActivity {
 
     private void reloadTimeLine() {
         AsyncTask<Void, Void, List<twitter4j.Status>> task = new AsyncTask<Void, Void, List<twitter4j.Status>>() {
+
+
+
             @Override
             protected List<twitter4j.Status> doInBackground(Void... params) {
                 try {
+                    Log.d("callcount=", String.valueOf(callcount++));
                     return mTwitter.getHomeTimeline();
                 } catch (TwitterException e) {
                     e.printStackTrace();
@@ -90,7 +100,7 @@ public class MainActivity extends ListActivity {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             if (convertView == null) {
-                convertView = mInflater.inflate(R.layout.list_item_tweet, null);
+                convertView = mInflater.inflate(R.layout.list_item_tweet, null);//templateかな？
             }
             Status item = getItem(position);
             TextView name = (TextView) convertView.findViewById(R.id.name);
