@@ -9,5 +9,6 @@
     <string name="twitter_callback_url">gabu://twitter</string>
     <string name="menu_refresh">更新</string>
     <string name="menu_tweet">つぶやく</string>
+    <string name="friendList">FriendList</string>
 
 </resources>

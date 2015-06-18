@@ -37,6 +37,9 @@
         <activity
             android:name=".TweetActivity"
             android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".StatusActivity"
+            android:windowSoftInputMode="adjustResize" />
     </application>
 
 </manifest>

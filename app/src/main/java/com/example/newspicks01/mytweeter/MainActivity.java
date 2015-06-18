@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,7 +31,6 @@ public class MainActivity extends ListActivity {
     private TweetAdapter mAdapter;
     private Twitter mTwitter;
 
-    int callcount=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +60,6 @@ public class MainActivity extends ListActivity {
             @Override
             protected List<twitter4j.Status> doInBackground(Void... params) {
                 try {
-                    Log.d("callcount=", String.valueOf(callcount++));
                     return mTwitter.getHomeTimeline();
                 } catch (TwitterException e) {
                     e.printStackTrace();
@@ -114,6 +113,21 @@ public class MainActivity extends ListActivity {
             return convertView;
         }
     }
+
+    @Override
+    protected void onListItemClick(ListView listView, View v, int position,
+                                   long id) {
+        super.onListItemClick(listView, v, position, id);
+        Status item = (Status) listView.getItemAtPosition(position);
+        final String screen_name= item.getUser().getScreenName();
+        Log.d("MainAct", screen_name);
+        Intent intent = new Intent(this, StatusActivity.class);
+        intent.putExtra("screen_name", screen_name);
+        intent.putExtra("status",item);
+//        intent.putExtra("mTwitter",mTwitter);
+        startActivity(intent);
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
