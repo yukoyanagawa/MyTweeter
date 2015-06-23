@@ -17,13 +17,14 @@ import android.widget.Toast;
 import com.loopj.android.image.SmartImageView;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
-import twitter4j.Friendship;
 import twitter4j.IDs;
 import twitter4j.Status;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
+import twitter4j.User;
 
 
 /**
@@ -57,7 +58,7 @@ public class StatusActivity  extends Activity implements Serializable {
     }
 
     private void reloadTimeLine() {
-        AsyncTask<Void, Void, List<Friendship>> task = new AsyncTask<Void, Void, List<twitter4j.Friendship>>() {
+        AsyncTask<Void, Void, List<User>> task = new AsyncTask<Void, Void, List<User>>() {
             int flag = -1;
             long Uid = 0L;
             int naga;
@@ -65,27 +66,44 @@ public class StatusActivity  extends Activity implements Serializable {
 
 
             @Override
-            protected List<twitter4j.Friendship> doInBackground(Void... params) {
+            protected List<twitter4j.User> doInBackground(Void... params) {
                 try {
 
                     System.out.println("****** reloadTimeLine");
                     //フォロワー一覧を取得
                     IDs followerIds = mTwitter.getFollowersIDs(status.getUser().getId(), -1L);
+                    IDs followIds = mTwitter.getFriendsIDs(status.getUser().getId(), -1L);
 
-                    long[] ids = followerIds.getIDs();
+//                    List followerid = Arrays.asList((followerIds.getIDs()));
+//                    List followid = Arrays.asList((followIds.getIDs()));
+                    long[] followerid= followerIds.getIDs();
+                    long[] followid = followIds.getIDs();
+                    naga = followerid.length;
+//                    naga=followerid.size();
+//                    long[] LimitId;
+//                    if (naga > 50) {
+//                        LimitId = new long[50];
+//                    } else {
+//                        LimitId = new long[followerid.length];
+//                    }
+//                    naga2 = LimitId.length;
+//                    for (int i = 0; i < LimitId.length; i++) {
+//                        LimitId[i] = followerid[i];
+//                    }
+                    List<User> UsersID=new ArrayList<User>();
 
-                    naga = ids.length;
-                    long[] LimitId;
-                    if (naga > 50) {
-                        LimitId = new long[50];
-                    } else {
-                        LimitId = new long[ids.length];
+                    int size=0;
+                    if(followerid.length>followid.length){size=followid.length;}
+                    else{size=followerid.length;}
+                    for(int i=0;i<followerid.length;i++){
+                        for(int j=0;j<followid.length;j++){
+                            if(followerid[i]==followid[j]){
+                                //idが重複しているものをリストに代入
+                                UsersID.add(mTwitter.showUser(followid[j]));
+                            }
+                        }
                     }
-                    naga2 = LimitId.length;
-                    for (int i = 0; i < LimitId.length; i++) {
-                        LimitId[i] = ids[i];
-                    }
-                    return mTwitter.lookupFriendships(LimitId);
+                    return UsersID;
                 } catch (TwitterException e) {
                     Log.e(getClass().getSimpleName(), e.toString());
                 }
@@ -93,15 +111,19 @@ public class StatusActivity  extends Activity implements Serializable {
             }
 
             @Override
-            protected void onPostExecute(List<twitter4j.Friendship> result) {
+            protected void onPostExecute(List<User> result) {
                 if (result != null) {
                     // 表示データのクリア
                     fAdapter.clear();
                     // 表示データの設定
-                    for (twitter4j.Friendship friend : result) {
-                        fAdapter.add(friend);
+                    for (User id : result) {
+                       fAdapter.add(id);
+
                     }
                     listView.setSelection(0);
+                    showToast(String.valueOf("naga:" + naga));
+                    showToast(String.valueOf("naga2:"+naga2));
+                    showToast(String.valueOf("result:"+result.size()));
                 } else {
 //                      showToast("フレンドリストの取得に失敗しました。");
                     showToast(String.valueOf(naga));
@@ -126,9 +148,7 @@ public class StatusActivity  extends Activity implements Serializable {
         icon.setImageUrl(status.getUser().getProfileImageURL());
     }
 
-    /*以下無駄*/
-
-    private class FriendAdapter extends ArrayAdapter<twitter4j.Friendship> {
+    private class FriendAdapter extends ArrayAdapter<twitter4j.User> {
 
         private LayoutInflater mInflater;
 
@@ -145,7 +165,7 @@ public class StatusActivity  extends Activity implements Serializable {
                 convertView = mInflater.inflate(R.layout.list_item_status, null);//templateかな？
             }
 
-            Friendship item = getItem(position);
+            User item = getItem(position);
             TextView name = (TextView) convertView.findViewById(R.id.name);
             name.setText(item.getName());
             TextView screenName = (TextView) convertView.findViewById(R.id.screen_name);
