@@ -121,11 +121,11 @@ public class StatusActivity  extends Activity implements Serializable {
 
                     }
                     listView.setSelection(0);
+                    showToast("フレンドリストの取得に成功しました。");
                     showToast(String.valueOf("naga:" + naga));
-                    showToast(String.valueOf("naga2:"+naga2));
                     showToast(String.valueOf("result:"+result.size()));
                 } else {
-//                      showToast("フレンドリストの取得に失敗しました。");
+                      showToast("フレンドリストの取得に失敗しました。");
                     showToast(String.valueOf(naga));
                     showToast(String.valueOf(naga2));
                 }
